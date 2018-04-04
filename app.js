@@ -64,9 +64,8 @@ async function tryPullMessage() {
     const msg = result.length == 1 ? JSON.parse(result[0]) : null;
     
     if (msg && msg.timestamp < new Date().getTime()) {
-        await zrem(MESSAGES_QUEUE, result);  
-        
-        return msg;
+        const count = await zrem(MESSAGES_QUEUE, result);
+        return count === 1 ? msg : null;
     }
     
     return;
